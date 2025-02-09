@@ -26,6 +26,6 @@
     "mounts": [
         "source=/dev/dri,target=/dev/dri,type=bind"
     ],
-    "postCreateCommand": "apt-get update && apt-get install -y php-cli mesa-vulkan-drivers vulkan-tools && npm install -g http-server && npm install",
+    "postCreateCommand": "sudo apt-get update && sudo apt-get install -y php-cli mesa-vulkan-drivers vulkan-tools && npm init -y && npm install -g http-server && npm install && npm install -g @huggingface/transformers",
     "remoteUser": "vscode"
 } 

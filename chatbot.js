@@ -23,7 +23,7 @@ const md = new markdownit();
 
 class TextGenerationPipeline {
     // static model_id = "HuggingFaceTB/SmolLM2-1.7B-Instruct";
-    static model_id = "HuggingFaceTB/SmolLM2-1.7B-Instruct";
+    // static model_id = "HuggingFaceTB/SmolLM2-1.7B-Instruct";
 
 
     // static model_id = "onnx-community/Qwen2.5-Coder-1.5B-Instruct"; # won't respect system message.
@@ -35,7 +35,7 @@ class TextGenerationPipeline {
     // static model_id = "onnx-community/Llama-3.2-3B-Instruct-onnx-web-gqa";
     // static model_id = "onnx-community/Llama-3.2-1B-Instruct"; # poor probably due to quanting.
     
-    // static model_id = "Xenova/Phi-3-mini-4k-instruct_fp16";
+    static model_id = "Xenova/Phi-3-mini-4k-instruct_fp16";
     static tokenizer = null;
     static model = null;
     static adapter = null;
@@ -183,49 +183,13 @@ class ChatBot {
         
         try {
             console.log('Checking WebGPU support...');
-            if (!navigator.gpu) {
-                throw new Error('WebGPU API not available. Please use Chrome 113+ or Brave browser with WebGPU enabled.');
-            }
-
-            // Request adapter with more detailed options
-            const adapter = await navigator.gpu.requestAdapter({
-                powerPreference: 'high-performance',
-                forceFallbackAdapter: false
-            });
-            
+            const adapter = await navigator.gpu?.requestAdapter();
             if (!adapter) {
-                throw new Error('No WebGPU adapter found. Please check that:\n' +
-                              '1. You have enabled WebGPU in chrome://flags\n' +
-                              '2. Your graphics drivers are up to date\n' +
-                              '3. Hardware acceleration is enabled in Chrome settings');
+                document.getElementById('browser-warning').style.display = 'block';
+                throw new Error('WebGPU is not supported. Please use Chrome or Brave browser.');
             }
-
-            // Get and log adapter info for debugging
-            const adapterInfo = await adapter.requestAdapterInfo();
-            console.log('WebGPU Adapter Info:', {
-                vendor: adapterInfo.vendor,
-                architecture: adapterInfo.architecture,
-                device: adapterInfo.device,
-                description: adapterInfo.description
-            });
-
-            // Request device with basic features
-            const device = await adapter.requestDevice({
-                requiredFeatures: [],
-                requiredLimits: {}
-            });
+            console.log('WebGPU supported, adapter found');
             
-            if (!device) {
-                throw new Error('Failed to create WebGPU device');
-            }
-
-            // Add error handler for device lost
-            device.lost.then((info) => {
-                console.error('WebGPU device lost:', info);
-                this.updateStatus('GPU device lost. Please reload the page.');
-            });
-
-            // Continue with model loading...
             this.updateStatus('Loading model...');
             console.log('Starting model load...');
             await TextGenerationPipeline.getInstance((progress) => {
@@ -250,10 +214,7 @@ class ChatBot {
             console.log('Initialization complete');
         } catch (error) {
             console.error('Initialization error:', error);
-            const errorMessage = error.message || 'Unknown error initializing WebGPU';
-            this.updateStatus(`Error: ${errorMessage}`);
-            document.getElementById('browser-warning').textContent = errorMessage;
-            document.getElementById('browser-warning').style.display = 'block';
+            this.updateStatus(`Error: ${error.message}`);
             this.loadButton.disabled = false;
             this.progressContainer.style.display = 'none';
         }

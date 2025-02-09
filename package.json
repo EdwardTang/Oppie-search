@@ -1,0 +1,25 @@
+{
+  "name": "oppie-search",
+  "version": "1.0.0",
+  "description": "Welcome to Oppie, an innovative AI-powered research platform that brings advanced language models directly to your browser. Named after J. Robert Oppenheimer, whose legacy of scientific innovation and ethical reflection inspires our commitment to open inquiry and responsible advancement, Oppie democratizes access to AI technology while maintaining high standards of performance and ethical responsibility.",
+  "main": "chatbot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EdwardTang/Oppie-search.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EdwardTang/Oppie-search/issues"
+  },
+  "homepage": "https://github.com/EdwardTang/Oppie-search#readme",
+  "dependencies": {
+    "@huggingface/transformers": "^3.3.3",
+    "markdown-it": "^14.1.0"
+  },
+  "devDependencies": {}
+}
