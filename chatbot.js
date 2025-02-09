@@ -183,13 +183,49 @@ class ChatBot {
         
         try {
             console.log('Checking WebGPU support...');
-            const adapter = await navigator.gpu?.requestAdapter();
-            if (!adapter) {
-                document.getElementById('browser-warning').style.display = 'block';
-                throw new Error('WebGPU is not supported. Please use Chrome or Brave browser.');
+            if (!navigator.gpu) {
+                throw new Error('WebGPU API not available. Please use Chrome 113+ or Brave browser with WebGPU enabled.');
             }
-            console.log('WebGPU supported, adapter found');
+
+            // Request adapter with more detailed options
+            const adapter = await navigator.gpu.requestAdapter({
+                powerPreference: 'high-performance',
+                forceFallbackAdapter: false
+            });
             
+            if (!adapter) {
+                throw new Error('No WebGPU adapter found. Please check that:\n' +
+                              '1. You have enabled WebGPU in chrome://flags\n' +
+                              '2. Your graphics drivers are up to date\n' +
+                              '3. Hardware acceleration is enabled in Chrome settings');
+            }
+
+            // Get and log adapter info for debugging
+            const adapterInfo = await adapter.requestAdapterInfo();
+            console.log('WebGPU Adapter Info:', {
+                vendor: adapterInfo.vendor,
+                architecture: adapterInfo.architecture,
+                device: adapterInfo.device,
+                description: adapterInfo.description
+            });
+
+            // Request device with basic features
+            const device = await adapter.requestDevice({
+                requiredFeatures: [],
+                requiredLimits: {}
+            });
+            
+            if (!device) {
+                throw new Error('Failed to create WebGPU device');
+            }
+
+            // Add error handler for device lost
+            device.lost.then((info) => {
+                console.error('WebGPU device lost:', info);
+                this.updateStatus('GPU device lost. Please reload the page.');
+            });
+
+            // Continue with model loading...
             this.updateStatus('Loading model...');
             console.log('Starting model load...');
             await TextGenerationPipeline.getInstance((progress) => {
@@ -214,7 +250,10 @@ class ChatBot {
             console.log('Initialization complete');
         } catch (error) {
             console.error('Initialization error:', error);
-            this.updateStatus(`Error: ${error.message}`);
+            const errorMessage = error.message || 'Unknown error initializing WebGPU';
+            this.updateStatus(`Error: ${errorMessage}`);
+            document.getElementById('browser-warning').textContent = errorMessage;
+            document.getElementById('browser-warning').style.display = 'block';
             this.loadButton.disabled = false;
             this.progressContainer.style.display = 'none';
         }

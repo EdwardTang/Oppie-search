@@ -19,5 +19,13 @@
             ]
         }
     },
-    "postCreateCommand": "apt-get update && apt-get install -y php-cli && npm install -g http-server && npm install",
+    "runArgs": [
+        "--device=/dev/dri:/dev/dri",
+        "--group-add=video"
+    ],
+    "mounts": [
+        "source=/dev/dri,target=/dev/dri,type=bind"
+    ],
+    "postCreateCommand": "apt-get update && apt-get install -y php-cli mesa-vulkan-drivers vulkan-tools && npm install -g http-server && npm install",
+    "remoteUser": "vscode"
 } 
