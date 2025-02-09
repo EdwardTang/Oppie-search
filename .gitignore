@@ -1,0 +1,42 @@
+# Devin Agent
+devin_utils/*
+.env
+.cursorrules
+venv/*
+devin.requirements.txt
+
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.pyc
+
+# Environment
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build
+dist/
+build/
+*.log
+
+# System
+.DS_Store
+Thumbs.db
+
+# Security
+.ssh/
+*.pem
+*.key
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
