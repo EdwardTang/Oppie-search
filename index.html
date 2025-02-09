@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oppie.xyz</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "@huggingface/transformers": "https://cdn.jsdelivr.net/npm/@huggingface/transformers/+esm",
+            "markdown-it": "https://cdn.jsdelivr.net/npm/markdown-it@13/+esm"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div class="main-container">
+        <div class="chat-header">
+            <h1>Oppie.xyz</h1>
+            <h3 class="slogan">Open Paths to Discovery</h3>
+            <div class="header-buttons">
+                <button id="load-button" class="button">Load Model</button>
+                <button id="clear-button" class="button secondary">Clear Chat</button>
+            </div>
+            <div id="status"></div>
+            <div id="progress-container">
+                <div id="progress-fill"></div>
+            </div>
+            <div id="browser-warning" style="display: none; color: #d93025; margin-top: 8px; font-size: 14px;">
+                ⚠️ WebGPU is required. Please use Chrome or Brave browser for the best experience.
+            </div>
+        </div>
+        
+        <div id="chat-container"></div>
+        
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Ask me anything..." disabled>
+            <button id="send-button" class="button" disabled>Send</button>
+            <button id="stop-button" class="button" disabled>Stop</button>
+        </div>
+    </div>
+    
+    <div id="context-panel">
+        <h2>Search Results</h2>
+        <div id="context-container"></div>
+    </div>
+
+    <script type="module" src="chatbot.js"></script>
+</body>
+</html> 
